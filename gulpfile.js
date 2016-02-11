@@ -6,7 +6,7 @@ const rename = require('gulp-rename');
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
 
-gulp.task('default', function() {
+gulp.task('default', ['compress','styles'], function() {
   gulp.watch('sass/**/*.scss', ['styles']);
   gulp.watch('src/**/*.js', ['compress']);
   browserSync.init({
@@ -27,7 +27,7 @@ gulp.task('compress', function() {
     .pipe(browserSync.stream());
 });
 
-gulp.task('styles', () => {
+gulp.task('styles', function() {
   gulp.src('sass/**/*.scss')
 		.pipe(sass().on('error', sass.logError))
     .pipe(autoprefixer({
