@@ -1,6 +1,8 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
+const concat = require('gulp-concat');
+const rename = require('gulp-rename');
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
 
@@ -17,6 +19,9 @@ gulp.task('default', function() {
 
 gulp.task('compress', function() {
   gulp.src('src/**/*.js')
+    .pipe(concat('cartodb-filterwizard.js'))
+    .pipe(gulp.dest('./dist'))
+    .pipe(rename('cartodb-filterwizard.min.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./dist'))
     .pipe(browserSync.stream());
