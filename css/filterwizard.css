@@ -1,0 +1,22 @@
+#filtercontrol {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 0; }
+
+#filterModal table {
+  width: 100%; }
+
+#filterModal td, #filterModal th {
+  padding-right: 10px;
+  font-size: 90%;
+  vertical-align: top; }
+
+#filterModal label {
+  font-weight: normal; }
+
+#filtercount {
+  float: left;
+  color: #999;
+  font-size: 110%;
+  font-weight: bold; }

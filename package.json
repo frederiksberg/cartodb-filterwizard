@@ -1,0 +1,25 @@
+{
+  "name": "cartodb-filterwizard",
+  "version": "0.0.1",
+  "description": "A filter control for CartoDB layers",
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "cartodb.js": "^3.15.1",
+    "eslint-config-airbnb": "^5.0.0",
+    "eslint-config-google": "^0.3.0",
+    "eslint-plugin-react": "^3.16.1",
+    "gulp": "^3.9.1",
+    "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.2",
+    "leaflet": "~0.7.0"
+  },
+  "main": "dist/cartodb.filterwizard.js",
+  "keywords": [
+    "maps",
+    "leaflet",
+    "cartodb"
+  ],
+  "author": "Niels Kjøller Hansen",
+  "license": "BSD-3-Clause",
+  "readmeFilename": "README.md"
+}
