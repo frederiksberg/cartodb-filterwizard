@@ -1,4 +1,26 @@
+/* global cartodb*/
 // class FilterBox {
+
+cartodb.filterWizard = {
+  model: {
+    init: function() {
+      console.log('Initilize!');
+    }
+  },
+  view: {
+    init: function() {
+      console.log('Initilize!');
+    },
+    render: function() {
+      console.log('Render!');
+    }
+  },
+  controller: {
+    init: function() {
+      console.log('Initilize!');
+    }
+  }
+};
 
 function FilterBox (element,layer,sublayer_no,filter_columns,options) {
   if (this instanceof FilterBox) {
