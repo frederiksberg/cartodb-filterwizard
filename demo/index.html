@@ -30,8 +30,14 @@ var mainapp = function(vis,layers) {
     {title : 'Tagtype', name : 'tag_kode_t', type : 'unique', options: {}},
     {title : 'Bygningsanvendelse', name : 'byg_anvend_kode_t', type : 'unique', options: { legend: true}}
   ];
-  var filterBox = new FilterBox('myfilter',layers[1],0,filter_columns,{});
+  //var filterBox = new FilterBox('myfilter',layers[1],0,filter_columns,{});
   map = vis.getNativeMap();
+  var filterControl = new L.Control.FilterWizard({
+    position: 'topright',
+    layer: layers[1],
+    sublayerNumber: 0,
+    filterColumns: filter_columns
+  }).addTo(map);
 }
 window.onload = function() {
  a=cartodb.createVis('map', 'https://kjlr.cartodb.com/api/v2/viz/38447dd6-c32f-11e5-a9df-0e31c9be1b51/viz.json').done(mainapp)
