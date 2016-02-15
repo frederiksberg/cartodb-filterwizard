@@ -117,7 +117,7 @@ cartodb.filterWizard = {
           part = 'date_part(\'year\',' + column.name + '::date)';
         }
         column.values.forEach(function(item) {
-          if (item.checked) {
+          if ((item.checked) && (item.value)) {
             checkedItems.push(item);
             checkedValues.push(item.value);
           }
