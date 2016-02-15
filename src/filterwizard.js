@@ -134,13 +134,18 @@ cartodb.filterWizard = {
                                              'filter-choice',
                                              columnElement);
           // Create checkbox. @todo: Fix names and ids
+          // var checkBox = L.DomUtil.create('input', '', checkBoxDiv);
           var checkBox = L.DomUtil.create('input', '', checkBoxDiv);
           checkBox.setAttribute('type', 'checkbox');
           checkBox.setAttribute('name', column.name + String(idx));
           if (value.checked) {
             checkBox.setAttribute('checked', 'true');
           }
-          checkBoxDiv.innerHTML += '&nbsp;';
+          checkBox.onclick = (function(value) {
+            return function() {
+              self.controller.toggleValue(value);
+            };
+          })(value);
           // Create label for checkbox
           var checkBoxLabel = L.DomUtil.create('label', '', checkBoxDiv);
           checkBoxLabel.setAttribute('for', column.name + String(idx));
@@ -176,6 +181,9 @@ cartodb.filterWizard = {
     getNullText: function() {
       var self = cartodb.filterWizard.filterController;
       return self.model.nullText;
+    },
+    toggleValue: function(value) {
+      value.checked = !(value.checked);
     }
   }
 };
