@@ -14,6 +14,7 @@ cartodb.filterWizard = {
 
       self.originalSQL = self.layer.getSubLayer(self.sublayerNumber)
         .getSQL().replace(/\n/g, '\n ');
+      self.filteredSQL = self.originalSQL;
       self.sqlURL = self.layer.options.sql_api_protocol + '://' +
             self.layer.options.user_name + '.' +
             self.layer.options.sql_api_domain + ':' +
@@ -26,6 +27,7 @@ cartodb.filterWizard = {
         column.values = [];
       });
       self._updateValues();
+      self.filteredResultCount = 0;
     },
 
     // Update unique values from each column
@@ -81,8 +83,70 @@ cartodb.filterWizard = {
 
       // When all requests are done, tell controller that values are updated.
       $.when.apply(null, queue).done(function() {
+        self.filteredSQL = self.makeQuery();
+        self.updateCount();
+      });
+    },
+    updateCount: function() {
+      var self = cartodb.filterWizard.filterModel;
+      var countQuery = 'SELECT COUNT(*) FROM (' + self.filteredSQL + ') f;';
+      var requestUrl = self.sqlURL + '?q=' + encodeURIComponent(countQuery);
+      $.getJSON(requestUrl, function(data) {
+        self.filteredCount = data.rows[0].count;
         self.controller.valuesUpdated();
       });
+    },
+    makeQuery: function() {
+      var self = cartodb.filterWizard.filterModel;
+
+      // Løb igennem de forskellige kolonner og lav et filter for hver. De kobles sammen med et AND.
+      // Hvis der ikke er sat krydser i en bestemt kolonne filtreres der ikke. Det samme er gældende for kryds i 'Alle'.
+      var whereClause;
+      var whereParts = [];
+      var returnNothing = false;
+
+      self.controller.getColumns().forEach(function(column) {
+        var part = '';
+        var checkedItems = [];
+        var checkedValues = [];
+        var nullChecked = false;
+
+        if (column.type === 'unique') {
+          part = column.name;
+        } else if (column.type === 'year') {
+          part = 'date_part(\'year\',' + column.name + '::date)';
+        }
+        column.values.forEach(function(item) {
+          if (item.checked) {
+            checkedItems.push(item);
+            checkedValues.push(item.value);
+          }
+          if ((item.value === null) && (item.checked)) {
+            nullChecked = true;
+          }
+        });
+
+        if (checkedItems.length === column.values.length) {
+          part = '';
+        } else if (checkedItems.length > 0) {
+          part += ' IN (\'' + checkedValues.join('\',\'') + '\')';
+          if (nullChecked) {
+            part += ' OR ' + column.name + ' IS NULL';
+          }
+          whereParts.push(part);
+        } else {
+          returnNothing = true;
+        }
+      });
+
+      if (returnNothing) {
+        return 'SELECT * FROM (' + self.originalSQL + ') LIMIT 0';
+      } else if (whereParts.length > 0) {
+        whereClause = 'WHERE (' + whereParts.join(') AND (') + ')';
+        return 'SELECT * FROM (' + self.originalSQL + ') o ' + whereClause;
+      } else if (whereParts.length === 0) {
+        return self.originalSQL;
+      }
     }
   },
 
@@ -93,6 +157,7 @@ cartodb.filterWizard = {
       self.controller = cartodb.filterWizard.filterController;
       self.header = document.getElementById('filterheader');
       self.body = document.getElementById('filterbody');
+      self.count = document.getElementById('filtercount').children[0];
       // Do not render as part of init, wait for valuesUpdated
     },
 
@@ -101,6 +166,9 @@ cartodb.filterWizard = {
 
       // Set header text @todo: Make this an option
       self.header.textContent = 'Vælg filter:';
+
+      // Set count
+      self.count.textContent = String(self.controller.getCount());
 
       // Clear out body
       self.body.innerHTML = '';
@@ -183,7 +251,14 @@ cartodb.filterWizard = {
       return self.model.nullText;
     },
     toggleValue: function(value) {
+      var self = cartodb.filterWizard.filterController;
       value.checked = !(value.checked);
+      self.model.filteredSQL = self.model.makeQuery();
+      self.model.updateCount();
+    },
+    getCount: function() {
+      var self = cartodb.filterWizard.filterController;
+      return self.model.filteredCount;
     }
   }
 };
