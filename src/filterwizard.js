@@ -2,7 +2,9 @@
 // class FilterBox {
 
 cartodb.filterWizard = {
+
   filterModel: {
+
     init: function() {
       var self = cartodb.filterWizard.filterModel;
       self.controller = cartodb.filterWizard.filterController;
@@ -19,20 +21,65 @@ cartodb.filterWizard = {
             self.layer.options.sql_api_endpoint;
       // @todo: change this to an option
       self.nullText = '(ukendt)';
+      // Add empty list of unique values
+      self.filterColumns.forEach(function(column) {
+        column.uniqueValues = [];
+      });
+      self._updateUniqueValues();
+    },
+
+    // Update unique values from each column
+    _updateUniqueValues: function() {
+      var self = cartodb.filterWizard.filterModel;
+      self.filterColumns.forEach(function(column) {
+        var query;
+
+        // Dertimine query from column type
+        if (column.type === 'unique') {
+          query = 'SELECT DISTINCT ' + column.name + ' as value' +
+                  ' FROM (' + self.originalSQL + ') a ' +
+                  'ORDER BY ' + column.name + ' ' +
+                  'ASC;';
+        } else if (column.type === 'year') {
+          query = 'SELECT DISTINCT date_part(\'year\',' + column.name +
+                  '::date) as value ' +
+                  'FROM (' + self.originalSQL + ') a ' +
+                  'ORDER BY ' + column.name + ' ' +
+                  'ASC;';
+        }
+
+        if (query) {
+          // Build request url
+          var request = self.sqlURL + '?q=' + encodeURIComponent(query);
+          $.getJSON(request, function(data) {
+            var values = [];
+            $.each(data.rows, function(key, value) {
+              values.push(value.value);
+            });
+            // Set column field
+            column.uniqueValues = values;
+          });
+        }
+      });
     }
   },
+
   filterModalView: {
+
     init: function() {
       var self = cartodb.filterWizard.filterModalView;
       self.controller = cartodb.filterWizard.filterController;
       self.header = document.getElementById('filterheader');
       self.body = document.getElementById('filterbody');
     },
+
     render: function() {
       console.log('Render!');
     }
   },
+
   filterController: {
+
     init: function(options) {
       var self = cartodb.filterWizard.filterController;
       self.model = cartodb.filterWizard.filterModel;
