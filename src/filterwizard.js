@@ -1,4 +1,4 @@
-/* global cartodb document $*/
+/* global cartodb document L $*/
 // class FilterBox {
 
 cartodb.filterWizard = {
@@ -23,14 +23,15 @@ cartodb.filterWizard = {
       self.nullText = '(ukendt)';
       // Add empty list of unique values
       self.filterColumns.forEach(function(column) {
-        column.uniqueValues = [];
+        column.values = [];
       });
-      self._updateUniqueValues();
+      self._updateValues();
     },
 
     // Update unique values from each column
-    _updateUniqueValues: function() {
+    _updateValues: function() {
       var self = cartodb.filterWizard.filterModel;
+      var queue = [];
       self.filterColumns.forEach(function(column) {
         var query;
 
@@ -50,16 +51,22 @@ cartodb.filterWizard = {
 
         if (query) {
           // Build request url
-          var request = self.sqlURL + '?q=' + encodeURIComponent(query);
-          $.getJSON(request, function(data) {
+          var requestUrl = self.sqlURL + '?q=' + encodeURIComponent(query);
+          queue.push($.getJSON(requestUrl, function(data) {
             var values = [];
             $.each(data.rows, function(key, value) {
-              values.push(value.value);
+              values.push({checked: false, value: value.value});
             });
+
             // Set column field
-            column.uniqueValues = values;
-          });
+            column.values = values;
+          }));
         }
+      });
+
+      // When all requests are done, tell controller that values are updated.
+      $.when.apply(null, queue).done(function() {
+        self.controller.valuesUpdated();
       });
     }
   },
@@ -71,23 +78,74 @@ cartodb.filterWizard = {
       self.controller = cartodb.filterWizard.filterController;
       self.header = document.getElementById('filterheader');
       self.body = document.getElementById('filterbody');
+      // Do not render as part of init, wait for valuesUpdated
     },
 
     render: function() {
-      console.log('Render!');
+      var self = cartodb.filterWizard.filterModalView;
+
+      // Set header text @todo: Make this an option
+      self.header.textContent = 'Vælg filter:';
+
+      // Clear out body
+      self.body.innerHTML = '';
+      var row = L.DomUtil.create('div', 'row', self.body);
+
+      var columns = self.controller.getColumns();
+
+      // Calculate basic column width for bootstrap grid.
+      var defaultColumnWidth = Math.floor(12 / columns.length);
+
+      // If the default column width does not add up to 12, how many columns
+      // should be wider?
+      var extraWidth = 12 % columns;
+      columns.forEach(function(column, idx) {
+        // Find out of it should be a wide column
+        var columnWidth = defaultColumnWidth;
+        if (idx < extraWidth) {
+          columnWidth += 1;
+        }
+
+        // Convert width to a bootstrap compatible string
+        var columnClass = 'col-md-' + String(columnWidth);
+
+        // Create column element and header
+        var columnElement = L.DomUtil.create('div', columnClass, row);
+        L.DomUtil.create('h4', '', columnElement).textContent = column.title;
+
+        // Add checkboxes
+        column.values.forEach(function(value) {
+          var checkBoxElement = L.DomUtil.create('div',
+                                                 'filter-choice',
+                                                 columnElement);
+          // Create checkbox. @todo: Fix names and ids
+          checkBoxElement.innerHTML = '<input type="checkbox" ' +
+            (value.checked ? 'checked' : '') + '" name="' + column.name +
+            '_"/>&nbsp;<label for="' + column.name + '_">' + value.value +
+            '</label><br />';
+        });
+      });
     }
   },
 
   filterController: {
 
-    init: function(options) {
+    init: function() {
       var self = cartodb.filterWizard.filterController;
       self.model = cartodb.filterWizard.filterModel;
       self.modalView = cartodb.filterWizard.filterModalView;
-      console.log(self);
-      self.model.options = options;
       self.model.init();
       self.modalView.init();
+    },
+
+    valuesUpdated: function() {
+      var self = cartodb.filterWizard.filterController;
+      self.modalView.render();
+    },
+
+    getColumns: function() {
+      var self = cartodb.filterWizard.filterController;
+      return self.model.filterColumns;
     }
   }
 };
