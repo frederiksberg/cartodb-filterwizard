@@ -41,13 +41,13 @@ cartodb.filterWizard = {
         if (column.type === 'unique') {
           query = 'SELECT DISTINCT ' + column.name + ' as value' +
                   ' FROM (' + self.originalSQL + ') a ' +
-                  'ORDER BY ' + column.name + ' ' +
+                  'ORDER BY value ' +
                   'ASC;';
         } else if (column.type === 'year') {
           query = 'SELECT DISTINCT date_part(\'year\',' + column.name +
                   '::date) as value ' +
                   'FROM (' + self.originalSQL + ') a ' +
-                  'ORDER BY ' + column.name + ' ' +
+                  'ORDER BY value ' +
                   'ASC;';
         }
 
