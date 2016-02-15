@@ -26,12 +26,12 @@ cartodb.filterWizard = {
       self.filterColumns.forEach(function(column) {
         column.values = [];
       });
-      self._updateValues();
+      self._updateValues(true);
       self.filteredResultCount = 0;
     },
 
     // Update unique values from each column
-    _updateValues: function() {
+    _updateValues: function(isFirstRun) {
       var self = cartodb.filterWizard.filterModel;
       var queue = [];
       self.filterColumns.forEach(function(column) {
@@ -84,6 +84,9 @@ cartodb.filterWizard = {
       // When all requests are done, tell controller that values are updated.
       $.when.apply(null, queue).done(function() {
         self.filteredSQL = self.makeQuery();
+        if (isFirstRun) {
+          self.controller.updateLayer();
+        }
         self.updateCount();
       });
     },
