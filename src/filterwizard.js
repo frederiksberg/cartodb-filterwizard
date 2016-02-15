@@ -129,15 +129,25 @@ cartodb.filterWizard = {
         L.DomUtil.create('h4', '', columnElement).textContent = column.title;
 
         // Add checkboxes
-        column.values.forEach(function(value) {
-          var checkBoxElement = L.DomUtil.create('div',
-                                                 'filter-choice',
-                                                 columnElement);
+        column.values.forEach(function(value, idx) {
+          var checkBoxDiv = L.DomUtil.create('div',
+                                             'filter-choice',
+                                             columnElement);
           // Create checkbox. @todo: Fix names and ids
-          checkBoxElement.innerHTML = '<input type="checkbox" ' +
-            (value.checked ? 'checked="true"' : '') + '" name="' + column.name +
-            '_"/>&nbsp;<label for="' + column.name + '_">' + value.value +
-            '</label><br />';
+          var checkBox = L.DomUtil.create('input', '', checkBoxDiv);
+          checkBox.setAttribute('type', 'checkbox');
+          checkBox.setAttribute('name', column.name + String(idx));
+          if (value.checked) {
+            checkBox.setAttribute('checked', 'true');
+          }
+          checkBoxDiv.innerHTML += '&nbsp;';
+          // Create label for checkbox
+          var checkBoxLabel = L.DomUtil.create('label', '', checkBoxDiv);
+          checkBoxLabel.setAttribute('for', column.name + String(idx));
+          checkBoxLabel.textContent =
+            (value.value === null) ?
+              self.controller.getNullText() :
+              value.value;
         });
       });
     }
@@ -161,6 +171,11 @@ cartodb.filterWizard = {
     getColumns: function() {
       var self = cartodb.filterWizard.filterController;
       return self.model.filterColumns;
+    },
+
+    getNullText: function() {
+      var self = cartodb.filterWizard.filterController;
+      return self.model.nullText;
     }
   }
 };
