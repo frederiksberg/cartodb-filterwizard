@@ -1,23 +1,46 @@
-/* global cartodb*/
+/* global cartodb document $*/
 // class FilterBox {
 
 cartodb.filterWizard = {
-  model: {
+  filterModel: {
     init: function() {
-      console.log('Initilize!');
+      var self = cartodb.filterWizard.filterModel;
+      self.controller = cartodb.filterWizard.filterController;
+      self.layer = self.options.layer;
+      self.sublayerNumber = self.options.sublayerNumber;
+      self.filterColumns = self.options.filterColumns;
+
+      self.originalSQL = self.layer.getSubLayer(self.sublayerNumber)
+        .getSQL().replace(/\n/g, '\n ');
+      self.sqlURL = self.layer.options.sql_api_protocol + '://' +
+            self.layer.options.user_name + '.' +
+            self.layer.options.sql_api_domain + ':' +
+            self.layer.options.sql_api_port +
+            self.layer.options.sql_api_endpoint;
+      // @todo: change this to an option
+      self.nullText = '(ukendt)';
     }
   },
-  view: {
+  filterModalView: {
     init: function() {
-      console.log('Initilize!');
+      var self = cartodb.filterWizard.filterModalView;
+      self.controller = cartodb.filterWizard.filterController;
+      self.header = document.getElementById('filterheader');
+      self.body = document.getElementById('filterbody');
     },
     render: function() {
       console.log('Render!');
     }
   },
-  controller: {
-    init: function() {
-      console.log('Initilize!');
+  filterController: {
+    init: function(options) {
+      var self = cartodb.filterWizard.filterController;
+      self.model = cartodb.filterWizard.filterModel;
+      self.modalView = cartodb.filterWizard.filterModalView;
+      console.log(self);
+      self.model.options = options;
+      self.model.init();
+      self.modalView.init();
     }
   }
 };

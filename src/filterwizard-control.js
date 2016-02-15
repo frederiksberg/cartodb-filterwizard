@@ -10,7 +10,7 @@ L.Control.FilterWizard = L.Control.extend({
   },
 
   initialize: function(options) {
-    this.controller = cartodb.filterWizard.controller.init(options);
+    this.controller = cartodb.filterWizard.filterController.init(options);
     console.log(options);
   },
 
