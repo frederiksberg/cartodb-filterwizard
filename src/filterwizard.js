@@ -55,7 +55,22 @@ cartodb.filterWizard = {
           queue.push($.getJSON(requestUrl, function(data) {
             var values = [];
             $.each(data.rows, function(key, value) {
-              values.push({checked: false, value: value.value});
+              // By default, all boxes are unchecked
+              var isChecked = false;
+
+              // Check if column has a checked option, and handle the various
+              // types.
+              if (column.options.hasOwnProperty('checked')) {
+                // If column is an array of values to be checked
+                if (column.options.checked.constructor === Array) {
+                  if ($.inArray(value.value, column.options.checked) >= 0) {
+                    isChecked = true;
+                  }
+                } else if (column.options.checked === 'all') {
+                  isChecked = true;
+                }
+              }
+              values.push({checked: isChecked, value: value.value});
             });
 
             // Set column field
@@ -120,7 +135,7 @@ cartodb.filterWizard = {
                                                  columnElement);
           // Create checkbox. @todo: Fix names and ids
           checkBoxElement.innerHTML = '<input type="checkbox" ' +
-            (value.checked ? 'checked' : '') + '" name="' + column.name +
+            (value.checked ? 'checked="true"' : '') + '" name="' + column.name +
             '_"/>&nbsp;<label for="' + column.name + '_">' + value.value +
             '</label><br />';
         });

@@ -28,8 +28,8 @@ html,body,#map {
 <script>
 var mainapp = function(vis,layers) {
   filter_columns = [
-    {title : 'Tagtype', name : 'tag_kode_t', type : 'unique', options: {}},
-    {title : 'Bygningsanvendelse', name : 'byg_anvend_kode_t', type : 'unique', options: { legend: true}}
+    {title : 'Tagtype', name : 'tag_kode_t', type : 'unique', options: { checked: 'all'}},
+    {title : 'Bygningsanvendelse', name : 'byg_anvend_kode_t', type : 'unique', options: { checked: ['Kollegium', 'Etageboligbebyggelse (flerfamiliehus, herunder tofamiliehus (vandret adskillelse mellem enhederne)'], legend: true}}
   ];
   //var filterBox = new FilterBox('myfilter',layers[1],0,filter_columns,{});
   map = vis.getNativeMap();
