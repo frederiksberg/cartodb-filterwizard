@@ -6,7 +6,7 @@ const rename = require('gulp-rename');
 const autoprefixer = require('gulp-autoprefixer');
 const browserSync = require('browser-sync').create();
 
-gulp.task('default', ['compress','styles'], function() {
+gulp.task('default', ['compress', 'styles'], function() {
   gulp.watch('sass/**/*.scss', ['styles']);
   gulp.watch('src/**/*.js', ['compress']);
   browserSync.init({
@@ -18,7 +18,7 @@ gulp.task('default', ['compress','styles'], function() {
 });
 
 gulp.task('compress', function() {
-  gulp.src('src/**/*.js')
+  gulp.src(['src/filterwizard.js', 'src/filterwizard-control.js'])
     .pipe(concat('cartodb-filterwizard.js'))
     .pipe(gulp.dest('./dist'))
     .pipe(rename('cartodb-filterwizard.min.js'))
