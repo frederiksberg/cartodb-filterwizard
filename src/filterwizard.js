@@ -10,10 +10,10 @@ cartodb.filterWizard = {
       self.controller = cartodb.filterWizard.filterController;
       self.layer = self.options.layer;
       self.sublayerNumber = self.options.sublayerNumber;
+      self.sublayer = self.layer.getSubLayer(self.sublayerNumber);
       self.filterColumns = self.options.filterColumns;
 
-      self.originalSQL = self.layer.getSubLayer(self.sublayerNumber)
-        .getSQL().replace(/\n/g, '\n ');
+      self.originalSQL = self.sublayer.getSQL().replace(/\n/g, '\n ');
       self.filteredSQL = self.originalSQL;
       self.sqlURL = self.layer.options.sql_api_protocol + '://' +
             self.layer.options.user_name + '.' +
@@ -158,6 +158,13 @@ cartodb.filterWizard = {
       self.header = document.getElementById('filterheader');
       self.body = document.getElementById('filterbody');
       self.count = document.getElementById('filtercount').children[0];
+      self.button = document.getElementById('filtersubmit');
+
+      self.button.onclick = function() {
+        self.controller.updateLayer();
+        $('#filterModal').modal('toggle');
+      };
+
       // Do not render as part of init, wait for valuesUpdated
     },
 
@@ -259,6 +266,12 @@ cartodb.filterWizard = {
     getCount: function() {
       var self = cartodb.filterWizard.filterController;
       return self.model.filteredCount;
+    },
+    updateLayer: function() {
+      var self = cartodb.filterWizard.filterController;
+      if (self.filteredSQL !== self.model.sublayer.getSQL()) {
+        self.model.sublayer.setSQL(self.model.filteredSQL);
+      }
     }
   }
 };
