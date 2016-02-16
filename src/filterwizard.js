@@ -210,6 +210,17 @@ cartodb.filterWizard = {
         var columnElement = L.DomUtil.create('div', columnClass, row);
         L.DomUtil.create('h4', '', columnElement).textContent = column.title;
 
+        var buttonAll = L.DomUtil.create('button',
+                              'btn btn-default btn-all btn-xs',
+                              columnElement);
+        buttonAll.setAttribute('type', 'button');
+        buttonAll.textContent = 'Vælg alle';
+        buttonAll.onclick = (function(column) {
+          return function() {
+            console.log(column);
+            self.controller.checkAll(column);
+          };
+        })(column);
         // Add checkboxes
         column.values.forEach(function(value, idx) {
           var checkBoxDiv = L.DomUtil.create('div',
@@ -228,6 +239,7 @@ cartodb.filterWizard = {
               self.controller.toggleValue(value);
             };
           })(value);
+
           // Create label for checkbox
           var checkBoxLabel = L.DomUtil.create('label', '', checkBoxDiv);
           checkBoxLabel.setAttribute('for', column.name + String(idx));
@@ -236,6 +248,16 @@ cartodb.filterWizard = {
               self.controller.getNullText() :
               value.value;
         });
+        var buttonNone = L.DomUtil.create('button',
+                                             'btn btn-xs btn-none',
+                                             columnElement);
+        buttonNone.setAttribute('type', 'button');
+        buttonNone.textContent = 'Intet';
+        buttonNone.onclick = (function(column) {
+          return function() {
+            self.controller.checkNone(column);
+          };
+        })(column);
       });
     }
   },
@@ -290,6 +312,20 @@ cartodb.filterWizard = {
       if (self.filteredSQL !== self.model.sublayer.getSQL()) {
         self.model.sublayer.setSQL(self.model.filteredSQL);
       }
+    },
+    checkAll: function(column) {
+      var self = cartodb.filterWizard.filterController;
+      column.values.forEach(function(item) {
+        item.checked = true;
+      });
+      self.model.updateCount();
+    },
+    checkNone: function(column) {
+      var self = cartodb.filterWizard.filterController;
+      column.values.forEach(function(item) {
+        item.checked = false;
+      });
+      self.model.updateCount();
     }
   }
 };
