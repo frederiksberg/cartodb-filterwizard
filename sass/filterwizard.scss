@@ -18,8 +18,15 @@
   }
 }
 
-.filter-choice input {
-  margin-right: 5px;
+.filter-choice {
+  input {
+    display: block;
+    margin-right: 5px;
+    float: left;
+  }
+  label {
+    display: block;
+  }
 }
 
 #filtercount {
