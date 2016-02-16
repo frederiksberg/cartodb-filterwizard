@@ -1,11 +1,10 @@
 {
   "name": "cartodb-filterwizard",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "A filter control for CartoDB layers",
   "devDependencies": {
     "browser-sync": "^2.11.1",
     "cartodb.js": "^3.15.1",
-    "eslint-config-airbnb": "^5.0.0",
     "eslint-config-google": "^0.3.0",
     "eslint-plugin-react": "^3.16.1",
     "gulp": "^3.9.1",
