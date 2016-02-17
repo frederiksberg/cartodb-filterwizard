@@ -8,18 +8,22 @@ It only works for public or hidden layers, ie. layers where the SQL interface
 is public.
 
 ## Demo
-http://lab.kjlr.dk/static/cartodb-filterwizard/demo/
+
+<http://lab.kjlr.dk/static/cartodb-filterwizard/demo/>
 
 ## Warning
+
 This is still a project under development and has several known issues:
-* A lot of hard coded strings in Danish
-* A lot of fixed element ids spread around the HTML
-* It possibly kills small furry animals
+
+*   A lot of hard coded strings in Danish
+*   A lot of fixed element ids spread around the HTML
+*   It possibly kills small furry animals
 
 ## How to get it
+
 If you do not need to modify code, the easiest is to get a pre-built package
 from here:
-http://lab.kjlr.dk/static/cartodb-filterwizard/cartodb-filterwizard-0.2.0.zip
+<http://lab.kjlr.dk/static/cartodb-filterwizard/cartodb-filterwizard-0.2.0.zip>
 
 ## How to use
 ```javascript
@@ -55,6 +59,7 @@ cartodb.createVis('map'), visualizationURL)
 ```
 
 ## How to build it
+
 You need to have a working [nodeJS](http://nodejs.org) environment.
 
 If you do not have `gulp-cli` installed, please do so:
