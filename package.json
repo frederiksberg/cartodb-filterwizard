@@ -1,6 +1,6 @@
 {
   "name": "cartodb-filterwizard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A filter control for CartoDB layers",
   "devDependencies": {
     "browser-sync": "^2.11.1",
