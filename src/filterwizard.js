@@ -132,8 +132,8 @@ cartodb.filterWizard = {
             nullChecked = true;
           }
         });
-
-        if (checkedItems.length === column.values.length) {
+        if (checkedItems.length ===
+            column.values.length - (1 * Number(nullChecked))) {
           part = '';
         } else if (checkedItems.length > 0) {
           part += ' IN (\'' + checkedValues.join('\',\'') + '\')';
@@ -141,13 +141,16 @@ cartodb.filterWizard = {
             part += ' OR ' + column.name + ' IS NULL';
           }
           whereParts.push(part);
+        } else if (nullChecked) {
+          part += ' IS NULL';
+          whereParts.push(part);
         } else {
           returnNothing = true;
         }
       });
 
       if (returnNothing) {
-        return 'SELECT * FROM (' + self.originalSQL + ') LIMIT 0';
+        return 'SELECT * FROM (' + self.originalSQL + ') o LIMIT 0';
       } else if (whereParts.length > 0) {
         whereClause = 'WHERE (' + whereParts.join(') AND (') + ')';
         return 'SELECT * FROM (' + self.originalSQL + ') o ' + whereClause;
@@ -301,6 +304,7 @@ cartodb.filterWizard = {
       var self = cartodb.filterWizard.filterController;
       value.checked = !(value.checked);
       self.model.filteredSQL = self.model.makeQuery();
+      console.log(self.model.filteredSQL);
       self.model.updateCount();
     },
     getCount: function() {
