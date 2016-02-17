@@ -28,6 +28,7 @@ var visualizationURL = '...'
 cartodb.createVis('map'), visualizationURL)
   .done(function(vis, layers) {
     var map = vis.getNativeMap();
+
     var filterConfiguration = {
       position: 'topright'
       layer: layers[1],
@@ -46,8 +47,11 @@ cartodb.createVis('map'), visualizationURL)
           options: {'checked' : 2014, 2015}
         }
       ]
-    }
-  });
+    };
+
+    map.addControl(new L.Control.FilterWizard(filterConfiguration));
+  })
+;
 ```
 
 ## How to build it
