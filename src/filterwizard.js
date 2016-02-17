@@ -318,6 +318,7 @@ cartodb.filterWizard = {
       column.values.forEach(function(item) {
         item.checked = true;
       });
+      self.model.filteredSQL = self.model.makeQuery();
       self.model.updateCount();
     },
     checkNone: function(column) {
@@ -325,6 +326,7 @@ cartodb.filterWizard = {
       column.values.forEach(function(item) {
         item.checked = false;
       });
+      self.model.filteredSQL = self.model.makeQuery();
       self.model.updateCount();
     }
   }
