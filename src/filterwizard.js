@@ -168,11 +168,15 @@ cartodb.filterWizard = {
       self.header = document.getElementById('filterheader');
       self.body = document.getElementById('filterbody');
       self.count = document.getElementById('filtercount').children[0];
-      self.button = document.getElementById('filtersubmit');
+      self.submitButton = document.getElementById('filtersubmit');
+      self.clearButton = document.getElementById('filterclear');
 
-      self.button.onclick = function() {
+      self.submitButton.onclick = function() {
         self.controller.updateLayer();
         $('#filterModal').modal('toggle');
+      };
+      self.clearButton.onclick = function() {
+        self.controller.checkNothing();
       };
 
       // Do not render as part of init, wait for valuesUpdated
@@ -251,16 +255,6 @@ cartodb.filterWizard = {
               self.controller.getNullText() :
               value.value;
         });
-        var buttonNone = L.DomUtil.create('button',
-                                             'btn btn-xs btn-none',
-                                             columnElement);
-        buttonNone.setAttribute('type', 'button');
-        buttonNone.textContent = 'Intet';
-        buttonNone.onclick = (function(column) {
-          return function() {
-            self.controller.checkNone(column);
-          };
-        })(column);
       });
     }
   },
@@ -325,10 +319,12 @@ cartodb.filterWizard = {
       self.model.filteredSQL = self.model.makeQuery();
       self.model.updateCount();
     },
-    checkNone: function(column) {
+    checkNothing: function() {
       var self = cartodb.filterWizard.filterController;
-      column.values.forEach(function(item) {
-        item.checked = false;
+      self.model.filterColumns.forEach(function(column) {
+        column.values.forEach(function(item) {
+          item.checked = false;
+        });
       });
       self.model.filteredSQL = self.model.makeQuery();
       self.model.updateCount();

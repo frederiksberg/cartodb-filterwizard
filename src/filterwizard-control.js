@@ -28,7 +28,8 @@ L.Control.FilterWizard = L.Control.extend({
       '<div class="modal-body" id="filterbody">' +
       '</div><div class="modal-footer"><div id="filtercount">Du har valgt ' +
       '<span class="value">0</span> projekter.</div><button type="button" ' +
-      'class="btn btn-default btn-close" data-dismiss="modal" ' +
+      'class="btn btn-warning" id="filterclear">Ryd valg</button><button ' +
+      'type="button" class="btn btn-primary btn-close" data-dismiss="modal" ' +
       'id="filtersubmit">Udfør</button></div></form></div></div>';
 
     var button = L.DomUtil.create('button', 'btn btn-info btn-lg', container);
