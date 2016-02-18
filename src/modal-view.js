@@ -4,16 +4,20 @@ cartodb.filterWizard.filterModalView = {
   init: function() {
     var self = cartodb.filterWizard.filterModalView;
     self.controller = cartodb.filterWizard.filterController;
+
+    // Get HTML elements from DOM
     self.header = document.getElementById('filterheader');
     self.body = document.getElementById('filterbody');
     self.count = document.getElementById('filtercount').children[0];
     self.submitButton = document.getElementById('filtersubmit');
     self.clearButton = document.getElementById('filterclear');
 
+    // Connect submit button
     self.submitButton.onclick = function() {
       self.controller.updateLayer();
       $('#filterModal').modal('toggle');
     };
+    // Conect clear button
     self.clearButton.onclick = function() {
       self.controller.checkNothing();
     };
@@ -56,6 +60,8 @@ cartodb.filterWizard.filterModalView = {
       var columnElement = L.DomUtil.create('div', columnClass, row);
       L.DomUtil.create('h4', '', columnElement).textContent = column.title;
 
+      // Make button to select all and connect it. Uses trick to send column to
+      // the handler.
       var buttonAll = L.DomUtil.create('button',
                             'btn btn-default btn-all btn-xs',
                             columnElement);
@@ -72,8 +78,7 @@ cartodb.filterWizard.filterModalView = {
         var checkBoxDiv = L.DomUtil.create('div',
                                            'filter-choice',
                                            columnElement);
-        // Create checkbox. @todo: Fix names and ids
-        // var checkBox = L.DomUtil.create('input', '', checkBoxDiv);
+        // Create checkbox and connect to function (trick to send the value)
         var checkBox = L.DomUtil.create('input', '', checkBoxDiv);
         checkBox.setAttribute('type', 'checkbox');
         checkBox.setAttribute('name', column.name + String(idx));
