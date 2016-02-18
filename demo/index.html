@@ -38,9 +38,10 @@ var mainapp = function(vis,layers) {
   };
   map = vis.getNativeMap();
   map.addControl(new L.Control.FilterWizard(filterConf));
-}
+};
+
 window.onload = function() {
- a=cartodb.createVis('map', 'https://kjlr.cartodb.com/api/v2/viz/38447dd6-c32f-11e5-a9df-0e31c9be1b51/viz.json').done(mainapp)
+  cartodb.createVis('map', 'https://kjlr.cartodb.com/api/v2/viz/38447dd6-c32f-11e5-a9df-0e31c9be1b51/viz.json').done(mainapp)
 }
 </script>
 
