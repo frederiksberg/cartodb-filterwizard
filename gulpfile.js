@@ -42,7 +42,11 @@ gulp.task('serve-styles', function() {
 });
 
 gulp.task('compress', function() {
-  gulp.src(['src/filterwizard.js', 'src/filterwizard-control.js'])
+  gulp.src(['src/main.js', 
+            'src/model.js',
+            'src/modal-view.js', 
+            'src/controller.js',
+            'src/leaflet-control.js' ])
     .pipe(concat('cartodb-filterwizard.js'))
     .pipe(gulp.dest('./dist'))
     .pipe(rename('cartodb-filterwizard.min.js'))
