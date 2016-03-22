@@ -181,10 +181,10 @@ cartodb.filterWizard.filterModel = {
         part += ' IS NULL';
         whereParts.push(part);
 
-      // Remaining possibility is where none is checked, and then empty result
-      // should be returned.
+      // Remaining possibility is where none is checked, and it has been decided
+      // to get the same result as when all is checked.
       } else {
-        returnNothing = true;
+        part = '';
       }
     });
 
