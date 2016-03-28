@@ -9,6 +9,7 @@ cartodb.filterWizard.filterModalView = {
     self.header = document.getElementById('filterheader');
     self.body = document.getElementById('filterbody');
     self.count = document.getElementById('filtercount').children[0];
+    self.objectName = document.getElementById('filtercount').children[1];
     self.submitButton = document.getElementById('filtersubmit');
     self.clearButton = document.getElementById('filterclear');
 
@@ -21,6 +22,9 @@ cartodb.filterWizard.filterModalView = {
     self.clearButton.onclick = function() {
       self.controller.checkNothing();
     };
+
+    // Set object name for the object counter
+    self.objectName.textContent = self.controller.getObjectName();
 
     // Do not render as part of init, wait for valuesUpdated
   },

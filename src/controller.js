@@ -56,6 +56,12 @@ cartodb.filterWizard.filterController = {
     return self.model.filteredCount;
   },
 
+  // Returns the name of the kind of objects selected
+  getObjectName: function() {
+    var self = cartodb.filterWizard.filterController;
+    return self.model.options.objectName;
+  },
+
   // If the filtered query is different from the already set query, update it.
   updateLayer: function() {
     var self = cartodb.filterWizard.filterController;
