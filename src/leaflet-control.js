@@ -11,9 +11,10 @@ L.Control.FilterWizard = L.Control.extend({
   },
 
   initialize: function(options) {
+    L.setOptions(this, options);
+
     // Add options to filterModel
     cartodb.filterWizard.filterModel.options = options;
-    console.log(options);
   },
 
   onAdd: function(map) {
