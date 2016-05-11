@@ -70,8 +70,11 @@ cartodb.filterWizard.filterModalView = {
       buttonAll.textContent = 'Vælg alle';
       buttonAll.onclick = (function(column) {
         return function() {
-          console.log(column);
-          self.controller.checkAll(column);
+          if (self.controller.allIsChecked(column)) {
+            self.controller.checkNone(column);
+          } else {
+            self.controller.checkAll(column);
+          }
         };
       })(column);
       // Add checkboxes

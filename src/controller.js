@@ -69,11 +69,37 @@ cartodb.filterWizard.filterController = {
       self.model.sublayer.setSQL(self.model.filteredSQL);
     }
   },
+
+  // Check if all values in column are checked
+  allIsChecked: function(column) {
+    var numValues = column.values.length;
+    var numChecked = 0;
+    column.values.forEach(function(item) {
+      if (item.checked) {
+        numChecked += 1;
+      }
+    });
+    return (numValues === numChecked);
+  },
+
   // Check all values in a column
   checkAll: function(column) {
     var self = cartodb.filterWizard.filterController;
     column.values.forEach(function(item) {
       item.checked = true;
+    });
+
+    // Make a new query to fit the changes
+    self.model.filteredSQL = self.model.makeQuery();
+    // Count the number of objects on the new query
+    self.model.updateCount();
+  },
+
+  // Uncheck all values in a column
+  checkNone: function(column) {
+    var self = cartodb.filterWizard.filterController;
+    column.values.forEach(function(item) {
+      item.checked = false;
     });
 
     // Make a new query to fit the changes
