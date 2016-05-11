@@ -32,9 +32,6 @@ cartodb.filterWizard.filterModalView = {
   render: function() {
     var self = cartodb.filterWizard.filterModalView;
 
-    // Set header text @todo: Make this an option
-    self.header.textContent = 'Vælg filter:';
-
     // Set count
     self.count.textContent = String(self.controller.getCount());
 

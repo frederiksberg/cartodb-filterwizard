@@ -14,6 +14,12 @@
     display: block;
   }
 }
+.modal-header {
+  text-align: right;
+  .btn {
+    margin-left: 5px;
+  }
+}
 .btn-area {
   padding: 5px;
 }
