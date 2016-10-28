@@ -132,6 +132,7 @@ cartodb.filterWizard.filterModel = {
     var whereClause;
     var whereParts = [];
     var returnNothing = false;
+    var numNoSelection = 0;
 
     self.controller.getColumns().forEach(function(column) {
       // Initial values
@@ -182,11 +183,18 @@ cartodb.filterWizard.filterModel = {
         whereParts.push(part);
 
       // Remaining possibility is where none is checked, and it has been decided
-      // to get the same result as when all is checked.
+      // to get the same result as when all is checked. Exception is if none is
+      // selected in all columns.
       } else {
         part = '';
+        numNoSelection += 1;
       }
     });
+
+    // If nothing is selected in all columns, return nothhing.
+    if (numNoSelection === self.controller.getColumns().length) {
+      returnNothing = true;
+    };
 
     // If nothing is checked in one or more columns, return an empty result.
     if (returnNothing) {
